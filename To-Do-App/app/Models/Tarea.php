@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Tarea extends Model
 {
+
+    protected $table = 'tarea';
     
     static $rules = [
 		'titulo' => 'required',

@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        //migration for table proyecto
         Schema::create('proyecto', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');

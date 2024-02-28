@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TaskMasterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [TaskMasterController::class, 'index']);
+
+Route::post('/saveTaskRoute', [TaskMasterController::class, 'saveTask'])->name('saveTask');
+
+Route::post('/markCompleteRoute/{id}', [TaskMasterController::class, 'markComplete'])->name('markComplete');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
