@@ -17,22 +17,66 @@
     </head>
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark::bg-gray-900 sm:items-center py-4 sm:pt-0">
-            <div>
-                <h1>task master</h1>
-                @foreach ($tasks as $tituloTarea)
-                    <p>Item: {{ $tituloTarea->titulo }}</p>
 
-                    <form method="post" action="{{ route('markComplete', $tituloTarea->id) }}" accept-charset="UTF-8">
-                        {{ csrf_field() }}
-                        <button type="submit" style="max-height: 25px; margin-left: 20px;">Mark Complete</button>
-                    </form>
-                @endforeach
-                <form method="post" action="{{ route('saveTask') }}" accept-charset="UTF-8">
-                    {{ csrf_field() }} 
-                    <label id="nombreTarea" >New Task</label></br>
-                    <input type="text" name="tituloTarea">
-                    <button type="submit">Save Task</button>
-                </form>
+            <div>
+                <h1>TaskMaster:)</h1>
+                <div>
+                    <div>
+                        @foreach ($tasks as $tituloTarea)
+                        <!--muestra el titulo del task-->
+                        <div id="task-{{ $tituloTarea->id }}" style="cursor: pointer;">{{ $tituloTarea->titulo }}</div>
+
+                        <!--muestra el contenido dentro del popup menu-->
+                        <div id="popupMenu-{{ $tituloTarea->id }}" style="display: none">
+                            <!--Marca una task como completada-->
+                            <form method="POST" action="{{ route('markComplete', $tituloTarea->id) }}" accept-charset="UTF-8">
+                                {{ csrf_field() }}
+                            <button type="submit" style="max-height: 25px; margin-left: 20px;">Mark Complete</button>
+                            </form>
+                            <!--borra tasks-->
+                            <form method="POST" action="{{ route('deleteTask', $tituloTarea->id) }}" accept-charset="UTF-8">
+                                {{ csrf_field() }}
+                                <button type="submit" style="max-height: 25px; margin-left: 20px;">Delete Task</button>
+                            </form>
+                            <!--asigna importancia a las tasks-->
+                            <form method="POST" action="{{ route('assignImportance', $tituloTarea->id) }}" accept-charset="UTF-8">
+                                {{ csrf_field() }}
+                                <select name="importance" id="">
+                                    <option value="0" {{ $tituloTarea->prioridad == '0' ? 'selected' : '' }}>Importante</option>
+                                    <option value="1" {{ $tituloTarea->prioridad == '1' ? 'selected' : '' }}>Urgencia</option>
+                                    <option value="2" {{ $tituloTarea->prioridad == '2' ? 'selected' : '' }}>Máxima Urgencia</option>
+                                </select>                                
+                                <button type="submit">Asignar Importancia</button>
+                            </form>
+                        </div>
+                        <!--logica del popup menu-->
+                        <script>
+                            document.getElementById('task-{{ $tituloTarea->id }}').addEventListener('click', function() {
+                                var popupMenu = document.getElementById('popupMenu-{{ $tituloTarea->id }}');
+                                if (popupMenu.style.display === 'none') {
+                                    popupMenu.style.display = 'block';
+                                } else {
+                                    popupMenu.style.display = 'none';
+                                }
+                            });
+                        </script>
+                        @endforeach
+                    </div
+                    <div>
+                        <form method="GET" action="{{ route('showCompleted') }}" accept-charset="UTF-8">
+                            {{ csrf_field() }}
+                            <button type="submit">Show Completed</button>
+                        </form>
+                    </div>
+                    <div>
+                        <form method="POST" action="{{ route('saveTask') }}" accept-charset="UTF-8">
+                            {{ csrf_field() }} 
+                            <label id="nombreTarea" >New Task</label></br>
+                            <input type="text" name="tituloTarea">
+                            <button type="submit">Save Task</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

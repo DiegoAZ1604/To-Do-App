@@ -21,14 +21,38 @@ class TaskMasterController extends Controller
         return redirect('/');
     }
 
+    public function deleteTask($id)
+    {
+        $task = Tarea::find($id);
+        $task->delete();
+        return redirect('/');
+    }
+
+    public function assignImportance($id, Request $request)
+    {
+        $task = Tarea::find($id);
+        $task->prioridad = $request->importance;
+        $task->save();
+        return redirect('/');
+    }
+
     public function saveTask(Request $request)
     {   
-        /*\Log::info(json_encode($request->all()));*/
+        if($request->tituloTarea == null){
+            return redirect('/');
+        }
         $newTask = new Tarea;
         $newTask->titulo = $request->tituloTarea;
         $newTask->estado = 'pendiente';
+        $newTask->fecha_inicio = date('Y-m-d');
         $newTask->save();
         return redirect('/');
+    }
+
+    public function showCompleted()
+    {
+        \Log::info(json_encode($request->all()));
+        return view('completed', ['tasks' => Tarea::where('estado', 'completada')->get()]);
     }
 
 

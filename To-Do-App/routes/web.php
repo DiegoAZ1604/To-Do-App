@@ -18,8 +18,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [TaskMasterController::class, 'index']);
 
 Route::post('/saveTaskRoute', [TaskMasterController::class, 'saveTask'])->name('saveTask');
-
 Route::post('/markCompleteRoute/{id}', [TaskMasterController::class, 'markComplete'])->name('markComplete');
+Route::post('/deleteTaskRoute/{id}', [TaskMasterController::class, 'deleteTask'])->name('deleteTask');
+Route::post('/assignImportanceRoute/{id}', [TaskMasterController::class, 'assignImportance'])->name('assignImportance');
+Route::get('/showCompletedRoute', [TaskMasterController::class, 'showCompleted'])->name('showCompleted');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
