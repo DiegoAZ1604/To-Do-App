@@ -28,8 +28,11 @@ Route::post('/assignImportanceRoute/{id}', [TaskMasterController::class, 'assign
 Route::get('/showCompletedRoute', [TaskMasterController::class, 'showCompleted'])->name('showCompleted');
 
 //projects
-//Route::get('/proyectos/{id}', [ProyectoController::class, 'show'])->name('proyectos.show');
-
+Route::get('/createProjectRoute', [ProyectoController::class, 'createProject'])->name('createProject');
+Route::post('/saveProjectRoute', [ProyectoController::class, 'saveProject'])->name('saveProject');
+Route::get('/showProjectsRoute', [ProyectoController::class, 'showProjects'])->name('showProjects');
+Route::post('/deleteProjectRoute/{id}', [ProyectoController::class, 'deleteProject'])->name('deleteProject');
+Route::post('/markProjectCompletedRoute/{id}', [ProyectoController::class, 'markProjectCompleted'])->name('markProjectCompleted');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

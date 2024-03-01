@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proyecto;
+use App\Models\Tarea;
 use Illuminate\Http\Request;
 
 /**
@@ -12,27 +13,57 @@ use Illuminate\Http\Request;
 class ProyectoController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $proyectos = Proyecto::paginate();
-
-        return view('proyecto.index', compact('proyectos'))
-            ->with('i', (request()->input('page', 1) - 1) * $proyectos->perPage());
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function createProject(Request $request)
     {
-        $proyecto = new Proyecto();
-        return view('proyecto.create', compact('proyecto'));
+        return view('proyecto.create');
+    }
+
+    public function index()
+    {
+        $tasks = Tarea::where('estado', 'pendiente')->get();
+        $proyectos = Proyecto::where('estado', 'en progreso')->get();
+        return view('tarea.index', ['tasks' => $tasks, 'proyectos' => $proyectos]);
+    }
+
+    public function saveProject(Request $request)
+    {
+        $newProject = new Proyecto;
+        $newProject->nombre = $request->titulo;
+        $newProject->descripcion = $request->descripcion;
+        $newProject->fecha_inicio = date('Y-m-d');
+        $newProject->estado = 'en progreso';
+        $newProject->save();
+        return redirect('/');
+    }
+
+    public function markProjectCompleted($id)
+    {
+        $project = Proyecto::find($id);
+        $project->estado = 'completado';
+        $project->save();
+        $tasks = Tarea::where('id_proyecto', $id)->get();
+        foreach($tasks as $task){
+            $task->estado = 'completada';
+            $task->save();
+        }
+    }
+
+    public function deleteProject($id)
+    {
+        $project = Proyecto::find($id);
+        $project->delete();
+        return redirect('/');
+    }
+
+    public function showProjects()
+    {
+        $proyectos = Proyecto::all();
+        $tasks = Tarea::where('estado', 'pendiente')->get();
+        return view('proyecto.index', compact('proyectos', 'tasks'));  
     }
 
     /**
@@ -50,27 +81,6 @@ class ProyectoController extends Controller
         return redirect()->route('proyectos.index')
             ->with('success', 'Proyecto created successfully.');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $proyecto = Proyecto::find($id);
-
-        return view('proyecto.show', compact('proyecto'));
-    }
-
-    /* NEW public function show($id)
-    {
-        $proyecto = Proyecto::findOrfail($id);
-        $tareas = $proyecto->tareas();
-
-        return view('proyecto.show', compact('proyecto', 'tareas'));
-    }*/
 
     /**
      * Show the form for editing the specified resource.

@@ -1,81 +1,71 @@
 @extends('layouts.app')
 
-@section('template_title')
-    Proyecto
-@endsection
-
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-
-                            <span id="card_title">
-                                {{ __('Proyecto') }}
-                            </span>
-
-                             <div class="float-right">
-                                <a href="{{ route('proyectos.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
-                                </a>
-                              </div>
-                        </div>
-                    </div>
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif
-
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="thead">
-                                    <tr>
-                                        <th>No</th>
-                                        
-										<th>Nombre</th>
-										<th>Descripcion</th>
-										<th>Fecha Inicio</th>
-										<th>Fecha Fin</th>
-										<th>Estado</th>
-										<th>Id Usuario</th>
-
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($proyectos as $proyecto)
-                                        <tr>
-                                            <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $proyecto->nombre }}</td>
-											<td>{{ $proyecto->descripcion }}</td>
-											<td>{{ $proyecto->fecha_inicio }}</td>
-											<td>{{ $proyecto->fecha_fin }}</td>
-											<td>{{ $proyecto->estado }}</td>
-											<td>{{ $proyecto->id_usuario }}</td>
-
-                                            <td>
-                                                <form action="{{ route('proyectos.destroy',$proyecto->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('proyectos.show',$proyecto->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('proyectos.edit',$proyecto->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                {!! $proyectos->links() !!}
-            </div>
-        </div>
+    <div style="color: white;">
+        <h1>All Projects :)</h1>
     </div>
+    <div style="color: white;">
+        @forelse ($proyectos as $proyecto)
+            <!-- Show the title of the project -->
+            <li id="project-{{ $proyecto->id }}" style="cursor: pointer;">{{ $proyecto->nombre }}</li>
+
+            <!-- Show the content of the popup menu -->
+            <div id="popupMenu-{{ $proyecto->id }}" style="display: none">
+
+                <!-- Show the description of the project -->
+                <div id="description-{{ $proyecto->id }}">
+                    @if ($proyecto->descripcion === null)
+                        No description yet!
+                    @else
+                    <p>Description: {{ $proyecto->descripcion }} </p>
+                    @endif
+                </div>
+
+                <!-- Show the tasks of the project -->
+                <div>
+                    <p>Tasks:</p>
+                    @foreach ($tasks as $task)
+                        @if ($task->id_proyecto === $proyecto->id)
+                            
+                            <li id="task-{{ $task->id }}">Task: {{ $task->titulo }}</li>
+                        @endif
+                    @endforeach
+
+                    @if ($proyecto->tareas->isEmpty())
+                        <div>No tasks yet!</div>
+                    @endif
+                </div>
+
+                <!--Mark project as completed -->
+                <div>
+                    <form method="POST" action="{{ route('markProjectCompleted', $proyecto->id) }}" accept-charset="UTF-8">
+                        {{ csrf_field() }}
+                        <button type="submit" style="max-height: 25px; margin-left: 20px;">Mark Completed</button>
+                    </form>
+                </div>
+
+                <!-- Delete project -->
+                <div>
+                    <form method="POST" action="{{ route('deleteProject', $proyecto->id) }}" accept-charset="UTF-8">
+                        {{ csrf_field() }}
+                        <button type="submit" style="max-height: 25px; margin-left: 20px;">Delete Project</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <script>
+                document.getElementById('project-{{ $proyecto->id }}').addEventListener('click', function() {
+                    var popupMenu = document.getElementById('popupMenu-{{ $proyecto->id }}');
+                    if (popupMenu.style.display === 'none') {
+                        popupMenu.style.display = 'block';
+                    } else {
+                        popupMenu.style.display = 'none';
+                    }
+                });
+            </script>
+        @empty
+            <div>No projects yet!</div>
+        @endforelse
+    </div> 
 @endsection
