@@ -64,6 +64,14 @@ class ProyectoController extends Controller
         return view('proyecto.show', compact('proyecto'));
     }
 
+    /* NEW public function show($id)
+    {
+        $proyecto = Proyecto::findOrfail($id);
+        $tareas = $proyecto->tareas();
+
+        return view('proyecto.show', compact('proyecto', 'tareas'));
+    }*/
+
     /**
      * Show the form for editing the specified resource.
      *

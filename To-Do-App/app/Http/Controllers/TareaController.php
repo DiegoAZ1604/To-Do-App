@@ -32,7 +32,7 @@ class TareaController extends Controller
     public function create()
     {
         $tarea = new Tarea();
-        return view('tarea.create', compact('tarea'));
+        return view('tarea.create');
     }
 
     /**
@@ -43,12 +43,12 @@ class TareaController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate(Tarea::$rules);
+        $task = new Task;
+        $task->titulo = $request->titulo;
+        $task->descripcion = $request->descripcion;
+        $task->save();
 
-        $tarea = Tarea::create($request->all());
-
-        return redirect()->route('tareas.index')
-            ->with('success', 'Tarea created successfully.');
+        return redirect('/tasks');
     }
 
     /**

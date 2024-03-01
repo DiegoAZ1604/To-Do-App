@@ -10,13 +10,27 @@ class TaskMasterController extends Controller
  
     public function index()
     {
-        return view('welcome', ['tasks' => Tarea::where('estado', 'pendiente')->get()]);
+        $tasks = Tarea::all();
+        return view('tarea.index', ['tasks' => Tarea::where('estado', 'pendiente')->get()]);
+    }
+
+    public function createTask(Request $request)
+    {
+       return view ('tarea.create');
     }
 
     public function markComplete($id)
     {
         $task = Tarea::find($id);
         $task->estado = 'completada';
+        $task->save();
+        return redirect('/');
+    }
+
+    public function markPending($id)
+    {
+        $task = Tarea::find($id);
+        $task->estado = 'pendiente';
         $task->save();
         return redirect('/');
     }
@@ -38,11 +52,12 @@ class TaskMasterController extends Controller
 
     public function saveTask(Request $request)
     {   
-        if($request->tituloTarea == null){
+        if($request->titulo == null){
             return redirect('/');
         }
         $newTask = new Tarea;
-        $newTask->titulo = $request->tituloTarea;
+        $newTask->titulo = $request->titulo;
+        $newTask->descripcion = $request->descripcion;
         $newTask->estado = 'pendiente';
         $newTask->fecha_inicio = date('Y-m-d');
         $newTask->save();
@@ -51,8 +66,7 @@ class TaskMasterController extends Controller
 
     public function showCompleted()
     {
-        \Log::info(json_encode($request->all()));
-        return view('completed', ['tasks' => Tarea::where('estado', 'completada')->get()]);
+        return view('tarea.completed', ['tasks' => Tarea::where('estado', 'completada')->get()]);
     }
 
 

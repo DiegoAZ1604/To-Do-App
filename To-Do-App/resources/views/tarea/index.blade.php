@@ -1,86 +1,65 @@
-@extends('layouts.app')
-
-@section('template_title')
-    Tarea
-@endsection
+@extends('layouts.app') 
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="color: white;">
+        <h1>TaskMaster :)</h1>
+        <div>
+            @forelse ($tasks as $task)
+                @if ($task->estado !== 'completada')
+                    <!-- Show the title of the task -->
+                    <div id="task-{{ $task->id }}" style="cursor: pointer;">{{ $task->titulo }}</div>
 
-                            <span id="card_title">
-                                {{ __('Tarea') }}
-                            </span>
+                        <!-- Show the content of the popup menu -->
+                        <div id="popupMenu-{{ $task->id }}" style="display: none">
 
-                             <div class="float-right">
-                                <a href="{{ route('tareas.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
-                                </a>
-                              </div>
-                        </div>
+                            <div id="description-{{ $task->id }}">{{ $task->descripcion }}</div>
+                            
+                            <!-- Button to mark the task as complete -->
+                            <form method="POST" action="{{ route('markComplete', $task->id) }}" accept-charset="UTF-8">
+                                {{ csrf_field() }}
+                                <button type="submit" style="max-height: 25px; margin-left: 20px;">Mark Complete</button>
+                            </form>
+
+                        <!-- Delete task -->
+                        <form method="POST" action="{{ route('deleteTask', $task->id) }}" accept-charset="UTF-8">
+                            {{ csrf_field() }}
+                            <button type="submit" style="max-height: 25px; margin-left: 20px;">Delete Task</button>
+                        </form>
+
+                        <!-- Assign importance to tasks -->
+                        <form method="POST" action="{{ route('assignImportance', $task->id) }}" accept-charset="UTF-8">
+                            {{ csrf_field() }}
+                            <select style="color: black;" name="importance" id="">
+                                <option style="color: black;" value="0" {{ $task->prioridad == '0' ? 'selected' : '' }}>Important</option>
+                                <option style="color: black;" value="1" {{ $task->prioridad == '1' ? 'selected' : '' }}>Urgent</option>
+                                <option style="color: black;" value="2" {{ $task->prioridad == '2' ? 'selected' : '' }}>Maximum Urgency</option>
+                            </select>                                
+                            <button type="submit">Asign Importance</button>
+                        </form> 
                     </div>
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif
 
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="thead">
-                                    <tr>
-                                        <th>No</th>
-                                        
-										<th>Titulo</th>
-										<th>Descripcion</th>
-										<th>Fecha Inicio</th>
-										<th>Fecha Fin</th>
-										<th>Prioridad</th>
-										<th>Categoria</th>
-										<th>Estado</th>
-										<th>Id Proyecto</th>
-										<th>Id Usuario</th>
+                    
 
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($tareas as $tarea)
-                                        <tr>
-                                            <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $tarea->titulo }}</td>
-											<td>{{ $tarea->descripcion }}</td>
-											<td>{{ $tarea->fecha_inicio }}</td>
-											<td>{{ $tarea->fecha_fin }}</td>
-											<td>{{ $tarea->prioridad }}</td>
-											<td>{{ $tarea->categoria }}</td>
-											<td>{{ $tarea->estado }}</td>
-											<td>{{ $tarea->id_proyecto }}</td>
-											<td>{{ $tarea->id_usuario }}</td>
-
-                                            <td>
-                                                <form action="{{ route('tareas.destroy',$tarea->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('tareas.show',$tarea->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('tareas.edit',$tarea->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                {!! $tareas->links() !!}
+                    <!-- Logic for the popup menu -->
+                    <script>
+                        document.getElementById('task-{{ $task->id }}').addEventListener('click', function() {
+                            var popupMenu = document.getElementById('popupMenu-{{ $task->id }}');
+                            if (popupMenu.style.display === 'none') {
+                                popupMenu.style.display = 'block';
+                            } else {
+                                popupMenu.style.display = 'none';
+                            }
+                        });
+                    </script>
+                @endif
+            @empty
+                <p>No pending tasks. ;)</p>
+            @endforelse
+            <div>
+                <a href="{{ route('createTask') }}">Create New Task</a>
+            </div>
+            <div>
+                <a href="{{ route('showCompleted') }}">Show Completed</a>
             </div>
         </div>
     </div>

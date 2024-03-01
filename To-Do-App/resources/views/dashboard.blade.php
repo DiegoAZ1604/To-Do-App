@@ -11,6 +11,9 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     {{ __("You're logged in!") }}
                 </div>
+                <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark::bg-gray-900 sm:items-center py-4 sm:pt-0">
+                    
+                </div>
             </div>
         </div>
     </div>

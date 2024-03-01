@@ -58,6 +58,11 @@ class Tarea extends Model
     {
         return $this->hasOne('App\Models\Proyecto', 'id', 'id_proyecto');
     }
+
+    /* NEW public function proyecto()
+    {
+        return $this->belongsTo(Proyecto::class, 'id_proyecto', 'id');
+    }*/
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

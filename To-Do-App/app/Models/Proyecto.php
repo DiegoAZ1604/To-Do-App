@@ -51,6 +51,11 @@ class Proyecto extends Model
     {
         return $this->hasMany('App\Models\Tarea', 'id_proyecto', 'id');
     }
+
+    /* NEW public function tareas()
+    {
+        return $this->hasMany(Tarea::class, 'id_proyecto', 'id');
+    }*/
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

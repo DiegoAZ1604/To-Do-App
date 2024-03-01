@@ -1,30 +1,32 @@
 @extends('layouts.app')
 
-@section('template_title')
-    {{ __('Create') }} Tarea
-@endsection
-
 @section('content')
-    <section class="content container-fluid">
-        <div class="row">
-            <div class="col-md-12">
+    <body>
+        <div style="color: white;" class="container mx-auto mt-8">
+            <h1 class="text-2xl font-bold mb-4">Create Task</h1>
 
-                @includeif('partials.errors')
-
-                <div class="card card-default">
-                    <div class="card-header">
-                        <span class="card-title">{{ __('Create') }} Tarea</span>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('tareas.store') }}"  role="form" enctype="multipart/form-data">
-                            @csrf
-
-                            @include('tarea.form')
-
-                        </form>
-                    </div>
+            <form method="POST" action="{{ route('saveTask') }}">
+                {{ csrf_field() }}
+            
+                <div class="mb-4">
+                    <label for="titulo" class="block mb-2">Task Title</label>
+                    <input style="color: black;" type="text" name="titulo" id="titulo" class="w-full border border-gray-400 p-2 rounded">
                 </div>
-            </div>
+            
+                <div class="mb-4">
+                    <label for="descripcion" class="block mb-2">Description</label>
+                    <textarea style="color: black;" name="descripcion" id="descripcion" class="w-full border border-gray-400 p-2 rounded"></textarea>
+                </div>
+
+                <!--<div class="mb-4">
+                    <label for="titulo" class="block mb-2">Task Title</label>
+                    <input type="text" name="titulo" id="titulo" class="w-full border border-gray-400 p-2 rounded">
+                </div>-->
+
+                
+            
+                <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded">Save Task</button>
+            </form>
         </div>
-    </section>
+    </body>
 @endsection
