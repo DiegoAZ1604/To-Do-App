@@ -26,8 +26,9 @@ class ProyectoController extends Controller
     {
         $tasks = Tarea::where('estado', 'pendiente')->get();
         $proyectos = Proyecto::where('estado', 'en progreso')->get();
-        return view('tarea.index', ['tasks' => $tasks, 'proyectos' => $proyectos]);
+        return view('dashboard', ['tasks' => $tasks, 'proyectos' => $proyectos]);
     }
+
 
     public function saveProject(Request $request)
     {
@@ -37,7 +38,7 @@ class ProyectoController extends Controller
         $newProject->fecha_inicio = date('Y-m-d');
         $newProject->estado = 'en progreso';
         $newProject->save();
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function markProjectPending($id)
@@ -50,7 +51,7 @@ class ProyectoController extends Controller
             $task->estado = 'pendiente';
             $task->save();
         }
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function markProjectCompleted($id)
@@ -63,14 +64,14 @@ class ProyectoController extends Controller
             $task->estado = 'completada';
             $task->save();
         }
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function deleteProject($id)
     {
         $project = Proyecto::find($id);
         $project->delete();
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function showProjects()

@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProyectoController;
-use App\Http\Controllers\TaskMasterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,16 +17,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [TaskMasterController::class, 'index']);
+//Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 //tasks
-Route::get('/createTaskRoute', [TaskMasterController::class, 'createTask'])->name('createTask');
-Route::post('/saveTaskRoute', [TaskMasterController::class, 'saveTask'])->name('saveTask');
-Route::post('/markCompleteRoute/{id}', [TaskMasterController::class, 'markComplete'])->name('markComplete');
-Route::post('/markPendingRoute/{id}', [TaskMasterController::class, 'markPending'])->name('markPending');
-Route::post('/deleteTaskRoute/{id}', [TaskMasterController::class, 'deleteTask'])->name('deleteTask');
-Route::post('/assignImportanceRoute/{id}', [TaskMasterController::class, 'assignImportance'])->name('assignImportance');
-Route::get('/showCompletedRoute', [TaskMasterController::class, 'showCompleted'])->name('showCompleted');
+Route::get('/createTaskRoute', [DashboardController::class, 'createTask'])->name('createTask');
+Route::post('/saveTaskRoute', [DashboardController::class, 'saveTask'])->name('saveTask');
+Route::post('/markCompleteRoute/{id}', [DashboardController::class, 'markComplete'])->name('markComplete');
+Route::post('/markPendingRoute/{id}', [DashboardController::class, 'markPending'])->name('markPending');
+Route::post('/deleteTaskRoute/{id}', [DashboardController::class, 'deleteTask'])->name('deleteTask');
+Route::post('/assignImportanceRoute/{id}', [DashboardController::class, 'assignImportance'])->name('assignImportance');
+Route::get('/showCompletedRoute', [DashboardController::class, 'showCompleted'])->name('showCompleted');
 
 //projects
 Route::get('/createProjectRoute', [ProyectoController::class, 'createProject'])->name('createProject');
@@ -35,10 +41,6 @@ Route::post('/deleteProjectRoute/{id}', [ProyectoController::class, 'deleteProje
 Route::post('/markProjectCompletedRoute/{id}', [ProyectoController::class, 'markProjectCompleted'])->name('markProjectCompleted');
 Route::post('/markProjectPendingRoute/{id}', [ProyectoController::class, 'markProjectPending'])->name('markProjectPending');
 Route::get('/completedProjectsRoute', [ProyectoController::class, 'completedProjects'])->name('completedProjects');
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

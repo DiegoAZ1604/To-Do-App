@@ -6,16 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\Tarea;
 use App\Models\Proyecto;
 
-/*class TaskMasterController extends Controller
+class DashboardController extends Controller
 {
- 
     public function index()
     {
+        
         $tasks = Tarea::where('estado', 'pendiente')->get();
         $proyectos = Proyecto::all();
-        return view('tarea.index', ['tasks' => $tasks, 'proyectos' => $proyectos]);
+        //dd($tasks, $proyectos);
+        return view('dashboard', ['tasks' => $tasks, 'proyectos' => $proyectos]);
     }
-
 
     public function createTask(Request $request)
     {
@@ -28,7 +28,7 @@ use App\Models\Proyecto;
         $task = Tarea::find($id);
         $task->estado = 'completada';
         $task->save();
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function markPending($id)
@@ -36,14 +36,14 @@ use App\Models\Proyecto;
         $task = Tarea::find($id);
         $task->estado = 'pendiente';
         $task->save();
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function deleteTask($id)
     {
         $task = Tarea::find($id);
         $task->delete();
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function assignImportance($id, Request $request)
@@ -51,13 +51,13 @@ use App\Models\Proyecto;
         $task = Tarea::find($id);
         $task->prioridad = $request->importance;
         $task->save();
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function saveTask(Request $request)
     {   
         if($request->titulo == null){
-            return redirect('/');
+            return redirect('/dashboard');
         }
         $newTask = new Tarea;
         $newTask->titulo = $request->titulo;
@@ -68,12 +68,11 @@ use App\Models\Proyecto;
         $newTask->id_proyecto = $request->proyecto;
         $newTask->save();
         
-        return redirect('/');
+        return redirect('/dashboard')/*->with('success', 'Task created successfully.')*/;
     }
 
     public function showCompleted()
     {
         return view('tarea.completed', ['tasks' => Tarea::where('estado', 'completada')->get()]);
     }
-
-}*/
+}
