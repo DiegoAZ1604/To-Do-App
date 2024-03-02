@@ -40,6 +40,19 @@ class ProyectoController extends Controller
         return redirect('/');
     }
 
+    public function markProjectPending($id)
+    {
+        $project = Proyecto::find($id);
+        $project->estado = 'en progreso';
+        $project->save();
+        $tasks = Tarea::where('id_proyecto', $id)->get();
+        foreach($tasks as $task){
+            $task->estado = 'pendiente';
+            $task->save();
+        }
+        return redirect('/');
+    }
+
     public function markProjectCompleted($id)
     {
         $project = Proyecto::find($id);
@@ -50,6 +63,7 @@ class ProyectoController extends Controller
             $task->estado = 'completada';
             $task->save();
         }
+        return redirect('/');
     }
 
     public function deleteProject($id)
@@ -61,10 +75,16 @@ class ProyectoController extends Controller
 
     public function showProjects()
     {
-        $proyectos = Proyecto::all();
+        $proyectos = Proyecto::where('estado', 'en progreso')->get();
         $tasks = Tarea::where('estado', 'pendiente')->get();
         return view('proyecto.index', compact('proyectos', 'tasks'));  
     }
+
+    public function completedProjects()
+    {
+        return view('proyecto.completed', ['proyectos' => Proyecto::where('estado', 'completado')->get()]);
+    }
+        
 
     /**
      * Store a newly created resource in storage.

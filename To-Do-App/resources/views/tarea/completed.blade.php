@@ -5,10 +5,10 @@
         <h1>Completed Tasks:</h1>
 
         @if(count($tasks) > 0)
-            <ul>
+            <div>
                 @foreach($tasks as $task)
                     <!-- Show the title of the task -->
-                    <div id="task-{{ $task->id }}" style="cursor: pointer;">{{ $task->titulo }}</div>
+                    <li id="task-{{ $task->id }}" style="cursor: pointer;">{{ $task->titulo }}</li>
 
                     <!-- Show the content of the popup menu -->
                     <div id="popupMenu-{{ $task->id }}" style="display: none">
@@ -35,9 +35,9 @@
                         });
                     </script>
                 @endforeach
-            </ul>
+                </div>
         @else
-            <p>No completed tasks.</p>
+            <p>No completed tasks :(</p>
         @endif
    </div>
 @endsection

@@ -33,6 +33,8 @@ Route::post('/saveProjectRoute', [ProyectoController::class, 'saveProject'])->na
 Route::get('/showProjectsRoute', [ProyectoController::class, 'showProjects'])->name('showProjects');
 Route::post('/deleteProjectRoute/{id}', [ProyectoController::class, 'deleteProject'])->name('deleteProject');
 Route::post('/markProjectCompletedRoute/{id}', [ProyectoController::class, 'markProjectCompleted'])->name('markProjectCompleted');
+Route::post('/markProjectPendingRoute/{id}', [ProyectoController::class, 'markProjectPending'])->name('markProjectPending');
+Route::get('/completedProjectsRoute', [ProyectoController::class, 'completedProjects'])->name('completedProjects');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

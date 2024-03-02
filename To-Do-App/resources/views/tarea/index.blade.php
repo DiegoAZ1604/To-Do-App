@@ -67,7 +67,7 @@
                     </script>
                 @endif
             @empty
-                <p>No pending tasks. ;)</p>
+                <li>No pending tasks. ;)</li>
             @endforelse
             <div>
                 <a href="{{ route('createTask') }}">Create New Task</a>

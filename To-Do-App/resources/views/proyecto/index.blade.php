@@ -67,5 +67,8 @@
         @empty
             <div>No projects yet!</div>
         @endforelse
+        <div>
+            <a href="{{ route('completedProjects') }}">Completed Projects</a>
+        </div>
     </div> 
 @endsection
